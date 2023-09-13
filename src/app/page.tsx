@@ -1,101 +1,82 @@
-import Image from 'next/image'
-import styles from './page.module.css'
-import { initializeApp } from '@firebase/app'
-import { getAuth } from 'firebase/auth'
-import { getFirebaseApp } from '@/core/utils'
+"use client";
 
-const app = getFirebaseApp();
-const auth = getAuth(app);
+import Image from "next/image";
+import styles from "./page.module.css";
+import { initializeApp } from "@firebase/app";
+import {
+	getFirestore,
+	onSnapshot,
+	query,
+	collection,
+	where,
+} from "firebase/firestore";
+import { useEffect, useState } from "react";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableRow,
+} from "@mui/material";
+
+const app = initializeApp({
+	apiKey: "AIzaSyBSr9C1M9a7UbyWukJk7MtvjaXiQdg59MQ",
+	authDomain: "weather-station-elka.firebaseapp.com",
+	databaseURL:
+		"https://weather-station-elka-default-rtdb.europe-west1.firebasedatabase.app",
+	projectId: "weather-station-elka",
+	storageBucket: "weather-station-elka.appspot.com",
+	messagingSenderId: "306368859932",
+	appId: "1:306368859932:web:b66e2bbfd1829a70ff74d9",
+});
+const db = getFirestore(app);
+const q = query(
+	collection(db, "weatherData"),
+	where("timestamp", ">", Date.now() / 1000 - 60 * 60 * 24)
+);
 
 export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+	const [weatherData, setWeatherData] = useState<any>(undefined);
+	useEffect(() => {
+		if (weatherData === undefined) {
+			onSnapshot(q, (querySnapshot) => {
+				let weatherData: any[] = [];
+				querySnapshot.forEach((doc) => {
+					weatherData.push(doc.data());
+				});
+				setWeatherData(weatherData);
+			});
+		}
+	}, [weatherData]);
+	console.log(weatherData);
+	return (
+		<main className={styles.main}>
+			<div className={styles.description}>
+				<Table>
+					<TableHead>
+						<TableRow>
+							<TableCell>Timestamp</TableCell>
+							<TableCell>StationId</TableCell>
+							<TableCell>Weather</TableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{weatherData?.map((row: any) => (
+							<TableRow key={row.timestamp}>
+								<TableCell component="th" scope="row">
+									{row.timestamp}
+								</TableCell>
+								<TableCell>{row.stationId}</TableCell>
+								<TableCell>{row.records?.map((record: any) => {
+                  return (
+                    `Wind: ${record.windSpeed} m/s ${record.windDirection}, T: ${record.temperature} °C, H: ${record.humidity} %\n`
+                  )
+                })}</TableCell>
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
+			</div>
+		</main>
+	);
 }
