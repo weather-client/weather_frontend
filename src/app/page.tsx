@@ -13,16 +13,14 @@ import {
 import { useEffect, useState } from "react";
 import {
   Snackbar,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
 } from "@mui/material";
-import LeafletMap from "../components/LeafletMap";
 import { WeatherData, WeatherStation } from "@/core/schemas";
 import { firebaseConfig } from "@/core/utils";
+import dynamic from "next/dynamic";
 
+const LeafletMap = dynamic(() => import("@/components/LeafletMap"), {
+	  ssr: false,
+});
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const qData = query(
