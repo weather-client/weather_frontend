@@ -19,6 +19,7 @@ export interface WeatherData {
   location: Location;
   timestamp: number;
   stationId: string;
+  source: string;
 }
 
 export interface WeatherStation {
