@@ -120,6 +120,8 @@ export class StationDetail extends Component<
 																	style={{
 																		border: "1px solid black",
 																		width: "fit-content",
+                                    padding: "3px",
+                                    borderRadius: "3px"
 																	}}
 																	key={
 																		row.timestamp +
@@ -153,6 +155,8 @@ export class StationDetail extends Component<
 																	style={{
 																		border: "1px solid black",
 																		width: "fit-content",
+                                    padding: "3px",
+                                    borderRadius: "3px"
 																	}}
 																	key={
 																		row.timestamp +
@@ -180,6 +184,8 @@ export class StationDetail extends Component<
 																	style={{
 																		border: "1px solid black",
 																		width: "fit-content",
+                                    padding: "3px",
+                                    borderRadius: "3px"
 																	}}
 																	key={
 																		row.timestamp +
