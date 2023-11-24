@@ -101,6 +101,8 @@ class LeafletMap extends Component<
                           style={{
                             border: "1px solid black",
                             width: "fit-content",
+                            padding: "3px",
+                            borderRadius: "3px"
                           }}
                           key={station + "-" + index}
                         >
@@ -121,6 +123,8 @@ class LeafletMap extends Component<
                             style={{
                               border: "1px solid black",
                               width: "fit-content",
+                              padding: "3px",
+                              borderRadius: "3px"
                             }}
                             key={station + "-" + index}
                           >
@@ -140,6 +144,8 @@ class LeafletMap extends Component<
                             style={{
                               border: "1px solid black",
                               width: "fit-content",
+                              padding: "3px",
+                              borderRadius: "3px"
                             }}
                             key={station + "-" + index}
                           >
